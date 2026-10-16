@@ -2,7 +2,7 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/Neutriny/Simy-Docs/deploy.yml?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f&label=Build%20%26%20Deploy)](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/Simy-Launguage/Simy-Docs/deploy.yml?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f&label=Build%20%26%20Deploy)](https://github.com/Simy-Launguage/Simy-Docs/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1e3a5f)](LICENSE)
 
 Documentation site for **Simy**, a DSL for **Minecraft datapack development**. Simy puts a
@@ -10,8 +10,8 @@ modern, Rust-flavoured surface syntax on top of the reality of `scoreboard` / `N
 `execute`, and transpiles to `mcfunction` and JSON that vanilla Minecraft runs. The docs
 describe the current grammar (**v0.1**).
 
-- English: <https://neutriny.github.io/Simy-Docs/>
-- 简体中文: <https://neutriny.github.io/Simy-Docs/zh/>
+- English: <https://simy-launguage.github.io/Simy-Docs/>
+- 简体中文: <https://simy-launguage.github.io/Simy-Docs/zh/>
 
 The site itself is a bilingual (English + Simplified Chinese) static site built with
 VitePress and deployed to GitHub Pages.
@@ -93,6 +93,9 @@ vp check        # format + lint + type check
   objects in `docs/.vitepress/config.ts`.
 - Wrap Simy snippets in ` ```simy ` fences to get highlighting from the grammar in
   `docs/.vitepress/simy.ts`.
+- The GitHub icon in the top-right corner comes from the `socialLinks` entry in
+  `docs/.vitepress/config.ts`, which points at the `repoUrl` constant — update it there if the
+  repository moves again.
 - Markdown is formatted by oxfmt, so run `vp check --fix` (or just commit — the pre-commit
   hook does it) before pushing.
 
@@ -108,7 +111,7 @@ no deployment) and on manual dispatch. It:
    `actions/configure-pages`, `actions/upload-pages-artifact` and `actions/deploy-pages`
    actions.
 
-The published URL is <https://neutriny.github.io/Simy-Docs/>. Repository → **Settings** →
+The published URL is <https://simy-launguage.github.io/Simy-Docs/>. Repository → **Settings** →
 **Pages** → **Build and deployment** → **Source** should be **GitHub Actions**
 (`configure-pages` with `enablement: true` enables it automatically on the first run).
 

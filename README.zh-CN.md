@@ -2,15 +2,15 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-[![构建 & 部署](https://img.shields.io/github/actions/workflow/status/Neutriny/Simy-Docs/deploy.yml?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f&label=%E6%9E%84%E5%BB%BA%20%26%20%E9%83%A8%E7%BD%B2)](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml)
+[![构建 & 部署](https://img.shields.io/github/actions/workflow/status/Simy-Launguage/Simy-Docs/deploy.yml?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f&label=%E6%9E%84%E5%BB%BA%20%26%20%E9%83%A8%E7%BD%B2)](https://github.com/Simy-Launguage/Simy-Docs/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1e3a5f)](LICENSE)
 
 **Simy** 文档站。Simy 是一门面向 **Minecraft 数据包开发**的 DSL：表层是现代化的
 Rust 风格语法，底层忠实映射 `scoreboard` / `NBT` / `execute` 的现实，最终转译为原版
 Minecraft 可直接运行的 `mcfunction` 与 JSON。本文档描述当前语法（**v0.1**）。
 
-- English: <https://neutriny.github.io/Simy-Docs/>
-- 简体中文: <https://neutriny.github.io/Simy-Docs/zh/>
+- English: <https://simy-launguage.github.io/Simy-Docs/>
+- 简体中文: <https://simy-launguage.github.io/Simy-Docs/zh/>
 
 站点本身是一个中英双语静态站，使用 VitePress 构建并部署在 GitHub Pages 上。
 
@@ -90,6 +90,8 @@ vp check        # 格式化 + Lint + 类型检查
 - 新增页面后，需要在 `docs/.vitepress/config.ts` 的 `enSidebar` / `zhSidebar`（以及
   `enNav` / `zhNav`）中登记。
 - Simy 代码片段请使用 ` ```simy ` 围栏，高亮由 `docs/.vitepress/simy.ts` 中的语法提供。
+- 页面右上角的 GitHub 图标来自 `docs/.vitepress/config.ts` 的 `socialLinks` 配置，指向
+  `repoUrl` 常量 —— 仓库再次迁移时改这里即可。
 - Markdown 由 oxfmt 统一格式化，推送前执行 `vp check --fix` 即可（提交时 pre-commit
   钩子也会自动执行）。
 
@@ -103,7 +105,7 @@ vp check        # 格式化 + Lint + 类型检查
 3. 上传 `docs/.vitepress/dist`，通过官方 `actions/configure-pages`、
    `actions/upload-pages-artifact`、`actions/deploy-pages` 发布到 GitHub Pages。
 
-线上地址：<https://neutriny.github.io/Simy-Docs/>。仓库 **Settings** → **Pages** →
+线上地址：<https://simy-launguage.github.io/Simy-Docs/>。仓库 **Settings** → **Pages** →
 **Build and deployment** 的 **Source** 应选择 **GitHub Actions**（`configure-pages` 配置了
 `enablement: true`，首次运行会自动开启）。
 

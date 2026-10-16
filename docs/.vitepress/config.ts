@@ -1,6 +1,14 @@
 import { defineConfig } from 'vitepress';
 import { simyLang } from './simy';
 
+/** Canonical repository, linked from the top-right of every page. */
+const repoUrl = 'https://github.com/Simy-Launguage/Simy-Docs';
+
+/** Published as a GitHub Pages project site, so `base` is part of the hostname. */
+const siteUrl = 'https://simy-launguage.github.io/Simy-Docs/';
+
+const socialLinks = [{ icon: 'github' as const, link: repoUrl }];
+
 const enNav = [
   { text: 'Guide', link: '/guide/introduction', activeMatch: '^/guide/' },
   { text: 'Reference', link: '/reference/lexical', activeMatch: '^/reference/' },
@@ -76,12 +84,11 @@ const zhSidebar = {
 };
 
 export default defineConfig({
-  // Published as a GitHub Pages project site: https://neutriny.github.io/Simy-Docs/
   base: '/Simy-Docs/',
   cleanUrls: true,
   sitemap: {
     // `base` has to be part of the hostname.
-    hostname: 'https://neutriny.github.io/Simy-Docs/',
+    hostname: siteUrl,
   },
   markdown: {
     languages: [simyLang as any],
@@ -95,6 +102,7 @@ export default defineConfig({
       description: 'Simy — a DSL for Minecraft datapack development.',
       themeConfig: {
         nav: enNav,
+        socialLinks,
         sidebar: enSidebar,
         outline: { level: [2, 3], label: 'On this page' },
         search: { provider: 'local' },
@@ -117,6 +125,7 @@ export default defineConfig({
       description: 'Simy —— 面向 Minecraft 数据包开发的 DSL。',
       themeConfig: {
         nav: zhNav,
+        socialLinks,
         sidebar: zhSidebar,
         outline: { level: [2, 3], label: '本页目录' },
         search: {
