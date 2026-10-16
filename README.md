@@ -1,6 +1,6 @@
 # Simy Docs
 
-[English](README.md) · [简体中文](README.zh-CN.md)
+English · [简体中文](README.zh-CN.md)
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/Simy-Launguage/Simy-Docs/deploy.yml?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f&label=Build%20%26%20Deploy)](https://github.com/Simy-Launguage/Simy-Docs/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1e3a5f)](LICENSE)
