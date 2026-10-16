@@ -2,8 +2,8 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-[![Build & Deploy Docs](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml/badge.svg)](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![构建 & 部署](https://img.shields.io/github/actions/workflow/status/Neutriny/Simy-Docs/deploy.yml?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f&label=%E6%9E%84%E5%BB%BA%20%26%20%E9%83%A8%E7%BD%B2)](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1e3a5f)](LICENSE)
 
 **Simy** 文档站。Simy 是一门面向 **Minecraft 数据包开发**的 DSL：表层是现代化的
 Rust 风格语法，底层忠实映射 `scoreboard` / `NBT` / `execute` 的现实，最终转译为原版
@@ -16,24 +16,33 @@ Minecraft 可直接运行的 `mcfunction` 与 JSON。本文档描述当前语法
 
 ## 技术栈
 
-| 层面         | 选型                                                                                       | 说明                                                                                          |
-| :----------- | :----------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- |
-| 站点生成器   | [VitePress](https://vitepress.dev/zh/) `2.0.0-alpha.20`                                    | Markdown 优先，逐页生成静态 HTML，可用 Vue 组件                                               |
-| UI 框架      | [Vue](https://cn.vuejs.org/) `3.5`                                                         | VitePress 默认主题，由 `docs/.vitepress/theme` 扩展                                           |
-| 打包器       | [Vite](https://cn.vite.dev/) 8（`vite-plus-core`）                                         | 通过 Vite+ 调用，不直接使用                                                                   |
-| 统一工具链   | [Vite+](https://viteplus.dev/) `1.3.0`（`vp` CLI）                                         | 一个 CLI 统一管理运行时、包管理器、构建、格式化、Lint 与类型检查                              |
-| 包管理器     | [pnpm](https://pnpm.io/zh/) `12.14.0`                                                      | 在 `package.json` → `devEngines.packageManager` 中声明（`onFail: download`）                  |
-| 依赖版本锁定 | pnpm workspace **catalog**                                                                 | `pnpm-workspace.yaml` 把 `vite` 映射到 `@voidzero-dev/vite-plus-core`，全仓统一               |
-| 代码高亮     | [Shiki](https://shiki.style/)（随 VitePress 内置）                                         | `docs/.vitepress/simy.ts` 提供自定义 TextMate 语法，高亮 ` ```simy ` 代码块                   |
-| 搜索         | VitePress 本地搜索                                                                         | 基于 [minisearch](https://github.com/lucaong/minisearch) 建立索引，无第三方服务，界面已中文化 |
-| 国际化       | VitePress locales                                                                          | 根 locale 为英文，`/zh/` 为简体中文，各自拥有导航、侧边栏与目录标签                           |
-| SEO          | `sitemap.xml` + `cleanUrls`                                                                | 双语页面输出 `<xhtml:link rel="alternate" hreflang="…">` 互指                                 |
-| 质量检查     | `vp check`                                                                                 | 一条命令完成 oxfmt 格式化、oxlint 类型感知 Lint 与 TypeScript 类型检查                        |
-| Git 钩子     | `.vite-hooks/pre-commit` → `vp staged`                                                     | 对暂存文件执行 `vp check --fix`（在 `vite.config.ts` 中配置）                                 |
-| CI/CD        | [GitHub Actions](.github/workflows/deploy.yml) → [GitHub Pages](https://pages.github.com/) | 用 `voidzero-dev/setup-vp` 构建，用 `actions/deploy-pages` 发布                               |
+[![VitePress 2.0.0-alpha.20](https://img.shields.io/badge/VitePress-2.0.0--alpha.20-5C73E7?style=for-the-badge&logo=vitepress&logoColor=white&labelColor=1e3a5f)](https://vitepress.dev/zh/)
+[![Vue 3.5](https://img.shields.io/badge/Vue-3.5-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white&labelColor=1e3a5f)](https://cn.vuejs.org/)
+[![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white&labelColor=1e3a5f)](https://cn.vite.dev/)
+[![Vite+ 1.3.0](https://img.shields.io/badge/Vite%2B-1.3.0-BD34FE?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://viteplus.dev/)
+[![pnpm v12](https://img.shields.io/badge/pnpm-v12-F69220?style=for-the-badge&logo=pnpm&logoColor=white&labelColor=1e3a5f)](https://pnpm.io/zh/)
+[![Shiki 语法高亮](https://img.shields.io/badge/Shiki-%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE-FF3670?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://shiki.style/)
+[![本地搜索 minisearch](https://img.shields.io/badge/%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2-minisearch-3b82f6?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://github.com/lucaong/minisearch)
+[![i18n EN · 中文](https://img.shields.io/badge/i18n-EN%20%C2%B7%20%E4%B8%AD%E6%96%87-3b82f6?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://vitepress.dev/zh/guide/i18n)
+[![SEO sitemap.xml · hreflang](https://img.shields.io/badge/SEO-sitemap.xml%20%C2%B7%20hreflang-3b82f6?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://vitepress.dev/zh/guide/sitemap-generation)
+[![vp check — 格式 · Lint · 类型](https://img.shields.io/badge/vp%20check-%E6%A0%BC%E5%BC%8F%20%C2%B7%20Lint%20%C2%B7%20%E7%B1%BB%E5%9E%8B-3b82f6?style=for-the-badge&logo=oxc&logoColor=white&labelColor=1e3a5f)](https://viteplus.dev/guide/check)
+[![GitHub Actions CI](https://img.shields.io/badge/GitHub%20Actions-CI-2088FF?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f)](.github/workflows/deploy.yml)
+[![GitHub Pages CD](https://img.shields.io/badge/GitHub%20Pages-CD-181717?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=1e3a5f)](https://pages.github.com/)
 
-除 Node.js 本身外，其余工具都来自锁定版本的 Vite+ 工具链，因此本地与 CI 使用同一套
-Vite、pnpm 与格式化器版本。
+- **一套工具链，一份锁文件。** Vite、格式化器、Lint 与包管理器都来自
+  `pnpm-workspace.yaml` 中锁定的 Vite+ 版本，本地与 CI 产出完全一致；
+  `pnpm-lock.yaml` 保证整个依赖图可复现。
+- **高亮语法是手写的。** `docs/.vitepress/simy.ts` 是一份精简的 TextMate 语法，
+  因此 ` ```simy ` 代码块无需等待 Shiki 官方支持即可高亮。
+- **搜索完全在客户端。** VitePress 本地搜索把
+  [minisearch](https://github.com/lucaong/minisearch) 索引打包进站点，不需要 Algolia
+  账号、不发起网络请求，中文界面文案已在 `config.ts` 中翻译。
+- **双语靠配置实现。** 英文位于 `/`，简体中文位于 `/zh/`；导航、侧边栏、目录标签、
+  搜索界面与 404 文案都按 locale 声明。
+- **SEO 自动生成。** `sitemap.xml` 覆盖两种语言并用 `hreflang` 互指，
+  `cleanUrls` 让链接不带 `.html` 后缀。
+- **提交前自动检查。** `vp check`（oxfmt 格式化、类型感知 oxlint、TypeScript 类型检查）
+  通过 `vp staged` 接入 `.vite-hooks/pre-commit`。
 
 ## 目录结构
 

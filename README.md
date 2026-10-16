@@ -2,8 +2,8 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-[![Build & Deploy Docs](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml/badge.svg)](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/Neutriny/Simy-Docs/deploy.yml?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f&label=Build%20%26%20Deploy)](https://github.com/Neutriny/Simy-Docs/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1e3a5f)](LICENSE)
 
 Documentation site for **Simy**, a DSL for **Minecraft datapack development**. Simy puts a
 modern, Rust-flavoured surface syntax on top of the reality of `scoreboard` / `NBT` /
@@ -18,24 +18,33 @@ VitePress and deployed to GitHub Pages.
 
 ## Tech stack
 
-| Layer            | Choice                                                                                     | Notes                                                                                                 |
-| :--------------- | :----------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| Site generator   | [VitePress](https://vitepress.dev/) `2.0.0-alpha.20`                                       | Markdown-first, static HTML per page, Vue-powered components                                          |
-| UI framework     | [Vue](https://vuejs.org/) `3.5`                                                            | VitePress default theme, extended by `docs/.vitepress/theme`                                          |
-| Bundler          | [Vite](https://vite.dev/) 8 via `vite-plus-core`                                           | Invoked through Vite+ rather than directly                                                            |
-| Toolchain        | [Vite+](https://viteplus.dev/) `1.3.0` (`vp` CLI)                                          | One CLI for runtime, package manager, dev/build, format, lint and type check                          |
-| Package manager  | [pnpm](https://pnpm.io/) `12.14.0`                                                         | Declared in `package.json` → `devEngines.packageManager` (`onFail: download`)                         |
-| Dependency pins  | pnpm workspace **catalog**                                                                 | `pnpm-workspace.yaml` maps `vite` to `@voidzero-dev/vite-plus-core` so every package shares it        |
-| Syntax highlight | [Shiki](https://shiki.style/) (bundled with VitePress)                                     | Custom TextMate grammar in `docs/.vitepress/simy.ts` highlights ` ```simy ` fences                    |
-| Search           | VitePress local search                                                                     | [minisearch](https://github.com/lucaong/minisearch) index, no third-party service, Chinese UI strings |
-| i18n             | VitePress locales                                                                          | Root locale = English, `/zh/` = Simplified Chinese, each with its own nav/sidebar/outline labels      |
-| SEO              | `sitemap.xml` + `cleanUrls`                                                                | Locale pages emit `<xhtml:link rel="alternate" hreflang="…">` for EN ⇄ ZH                             |
-| Quality gates    | `vp check`                                                                                 | oxfmt (format), oxlint (type-aware lint) and TypeScript type checks in one command                    |
-| Git hooks        | `.vite-hooks/pre-commit` → `vp staged`                                                     | Runs `vp check --fix` on staged files (configured in `vite.config.ts`)                                |
-| CI/CD            | [GitHub Actions](.github/workflows/deploy.yml) → [GitHub Pages](https://pages.github.com/) | Built with `voidzero-dev/setup-vp`, published with `actions/deploy-pages`                             |
+[![VitePress 2.0.0-alpha.20](https://img.shields.io/badge/VitePress-2.0.0--alpha.20-5C73E7?style=for-the-badge&logo=vitepress&logoColor=white&labelColor=1e3a5f)](https://vitepress.dev/)
+[![Vue 3.5](https://img.shields.io/badge/Vue-3.5-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white&labelColor=1e3a5f)](https://vuejs.org/)
+[![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white&labelColor=1e3a5f)](https://vite.dev/)
+[![Vite+ 1.3.0](https://img.shields.io/badge/Vite%2B-1.3.0-BD34FE?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://viteplus.dev/)
+[![pnpm v12](https://img.shields.io/badge/pnpm-v12-F69220?style=for-the-badge&logo=pnpm&logoColor=white&labelColor=1e3a5f)](https://pnpm.io/)
+[![Shiki syntax highlighting](https://img.shields.io/badge/Shiki-syntax%20highlight-FF3670?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://shiki.style/)
+[![Local search minisearch](https://img.shields.io/badge/Local%20search-minisearch-3b82f6?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://github.com/lucaong/minisearch)
+[![i18n EN · ZH](https://img.shields.io/badge/i18n-EN%20%C2%B7%20ZH-3b82f6?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://vitepress.dev/guide/i18n)
+[![SEO sitemap.xml · hreflang](https://img.shields.io/badge/SEO-sitemap.xml%20%C2%B7%20hreflang-3b82f6?style=for-the-badge&logoColor=white&labelColor=1e3a5f)](https://vitepress.dev/guide/sitemap-generation)
+[![vp check — oxfmt · oxlint · tsc](https://img.shields.io/badge/vp%20check-oxfmt%20%C2%B7%20oxlint%20%C2%B7%20tsc-3b82f6?style=for-the-badge&logo=oxc&logoColor=white&labelColor=1e3a5f)](https://viteplus.dev/guide/check)
+[![GitHub Actions CI](https://img.shields.io/badge/GitHub%20Actions-CI-2088FF?style=for-the-badge&logo=githubactions&logoColor=white&labelColor=1e3a5f)](.github/workflows/deploy.yml)
+[![GitHub Pages CD](https://img.shields.io/badge/GitHub%20Pages-CD-181717?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=1e3a5f)](https://pages.github.com/)
 
-Everything except Node.js itself comes from the pinned Vite+ toolchain, so local runs and CI
-use the same Vite, pnpm and formatter versions.
+- **One toolchain, one lockfile.** Vite, the formatter, the linter and the package manager all
+  come from the Vite+ release pinned in `pnpm-workspace.yaml`, so local runs and CI produce the
+  same output. `pnpm-lock.yaml` keeps the whole graph reproducible.
+- **The syntax highlighting is handwritten.** `docs/.vitepress/simy.ts` is a small TextMate
+  grammar, so ` ```simy ` snippets are highlighted without waiting for Shiki to ship support.
+- **Search runs client-side.** VitePress' local search bundles a
+  [minisearch](https://github.com/lucaong/minisearch) index into the site — no Algolia account,
+  no network calls — with the Chinese UI strings translated in `config.ts`.
+- **Bilingual by configuration.** English lives at `/`, Simplified Chinese at `/zh/`; nav,
+  sidebar, outline labels, local-search copy and 404 text are declared per locale.
+- **SEO is generated.** `sitemap.xml` lists both locales and cross-links them with
+  `hreflang` alternates, while `cleanUrls` keeps links extension-free.
+- **Checks run before every commit.** `vp check` (oxfmt formatting, type-aware oxlint, TypeScript
+  type check) is wired into `.vite-hooks/pre-commit` through `vp staged`.
 
 ## Project structure
 
