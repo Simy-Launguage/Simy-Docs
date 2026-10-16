@@ -20,6 +20,7 @@ const enSidebar = {
       text: 'Guide',
       items: [
         { text: 'Introduction', link: '/guide/introduction' },
+        { text: 'Installation', link: '/guide/installation' },
         { text: 'Design Principles', link: '/guide/design-principles' },
         { text: 'Why Rust-like Syntax?', link: '/guide/why-rust-like' },
       ],
@@ -57,6 +58,7 @@ const zhSidebar = {
       text: '指南',
       items: [
         { text: '简介', link: '/zh/guide/introduction' },
+        { text: '安装', link: '/zh/guide/installation' },
         { text: '设计原则', link: '/zh/guide/design-principles' },
         { text: '为什么像 Rust', link: '/zh/guide/why-rust-like' },
       ],

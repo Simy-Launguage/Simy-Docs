@@ -22,8 +22,10 @@ surface language with:
 - **An NBT escape hatch** so nothing is ever blocked by a new game version.
 
 ::: tip New here?
-Read the [Design Principles](/guide/design-principles) for the "why", then jump into
-the [syntax reference](/reference/lexical) for the "how".
+Wondering how to get the compiler? The [installation guide](/guide/installation) walks through
+the Rust toolchain and the `cargo install` step. Then read the
+[Design Principles](/guide/design-principles) for the "why", and jump into the
+[syntax reference](/reference/lexical) for the "how".
 :::
 
 ## What it compiles to

@@ -19,7 +19,8 @@ Simy 保持语义与 Minecraft 实际执行的一致，但提供一门表层语�
 - **NBT 逃生舱**，新游戏版本永远不会把你卡住。
 
 ::: tip 第一次来？
-先读[设计原则](/zh/guide/design-principles)了解「为什么」，再进入[语法参考](/zh/reference/lexical)看「怎么写」。
+想知道怎么装编译器？[安装](/zh/guide/installation)一节讲了 Rust 工具链与 `cargo install`
+的步骤。之后再先读[设计原则](/zh/guide/design-principles)了解「为什么」，进入[语法参考](/zh/reference/lexical)看「怎么写」。
 :::
 
 ## 编译成什么
