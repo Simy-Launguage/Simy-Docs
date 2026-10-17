@@ -28,8 +28,30 @@ winget install Rustlang.Rustup
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-rustup 询问时选默认的 stable 工具链即可。如果 Windows 上提示缺少 C++ 链接器，就让安装器
-装 **Visual Studio C++ 生成工具** —— Rust 链接二进制时需要它们。
+rustup 询问时选默认的 stable 工具链即可。
+
+### Windows：MSVC 生成工具与 Windows SDK
+
+Rust 在 Windows 上默认使用 `x86_64-pc-windows-msvc` 目标，链接时依赖 **MSVC C++ 生成工具
+与 Windows SDK**。如果之前没有装过，`rustup-init.exe` 会强制下载 VS Installer，为了附带这些
+组件而安装体积庞大的 **Visual Studio 编辑器（IDE）**。
+
+如果对磁盘空间敏感，可以先只装生成工具：
+
+1. 下载 [Visual Studio 2026 生成工具](https://aka.ms/vs/stable/vs_BuildTools.exe)（同一个
+   引导程序也列在 [Visual Studio 下载页](https://visualstudio.microsoft.com/zh-hans/downloads/)）。
+2. 运行它装好 **VS Installer**，然后切到「**单个组件**」标签页。
+3. 勾选 **Windows 11 SDK** 与 **适用于 x64/x86 的 MSVC 生成工具(最新版)**；使用旧版命名的
+   安装器里这一项写作 **MSVC v143 - VS 2022 C++ x64/x86 生成工具(最新版)**。两项合计约
+   2.5 GB。
+4. 点「安装」，装完**重启**，然后再次启动 `rustup-init.exe` —— 它会检测到工具链，不再要求
+   安装 Visual Studio。
+
+![Visual Studio Installer 的「单个组件」页：勾选 Windows 11 SDK 与适用于 x64/x86 的 MSVC 生成工具(最新版)](/guide/msvc-build-tools.png)
+
+已经装过 Visual Studio（或其他 MSVC 工具链）的话，这一步可以跳过。
+
+### 检查工具链
 
 然后**新开一个终端**（让 `PATH` 生效）并检查版本：
 

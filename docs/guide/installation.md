@@ -30,11 +30,35 @@ winget install Rustlang.Rustup
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-When rustup asks, the default (stable) toolchain is the right choice. If the installer reports
-that a C++ linker is missing on Windows, let it install the **Visual Studio C++ Build Tools** —
-Rust needs them to link binaries.
+When rustup asks, the default (stable) toolchain is the right choice.
 
-Then open a **new** terminal (so the updated `PATH` takes effect) and check the versions:
+### Windows: MSVC build tools and the Windows SDK
+
+Rust's default Windows target (`x86_64-pc-windows-msvc`) links with MSVC, so it needs the
+**MSVC C++ build tools and the Windows SDK**. If neither is installed yet, `rustup-init.exe`
+offers to download the Visual Studio Installer and installs the whole **Visual Studio IDE**
+(several gigabytes) just to bring those components along.
+
+If you would rather not spend the disk space, install only the build tools first:
+
+1. Download the [Visual Studio 2026 Build Tools](https://aka.ms/vs/stable/vs_BuildTools.exe) —
+   the same bootstrapper is listed on the
+   [Visual Studio downloads page](https://visualstudio.microsoft.com/downloads/).
+2. Run it to set up the **Visual Studio Installer**, then open the **Individual components**
+   tab.
+3. Tick **Windows 11 SDK** and **MSVC build tools for x64/x86 (latest)**. Installers that still
+   use the older naming show the second entry as
+   **MSVC v143 - VS 2022 C++ x64/x86 build tools (latest)**. The pair is about 2.5 GB.
+4. Install, **restart**, then run `rustup-init.exe` again — it detects the toolchain and stops
+   asking for Visual Studio.
+
+![Visual Studio Installer, Individual components tab, with the Windows 11 SDK and the MSVC build tools for x64/x86 ticked](/guide/msvc-build-tools.png)
+
+Already have Visual Studio (or another MSVC toolchain) installed? Then you can skip this part.
+
+### Check the toolchain
+
+Open a **new** terminal (so the updated `PATH` takes effect) and check the versions:
 
 ```sh
 rustc --version
