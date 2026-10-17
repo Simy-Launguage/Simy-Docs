@@ -8,6 +8,9 @@
 /** 文档注释 */
 ```
 
+`#[…]` **不是注释**——它是装饰下一行声明的[属性](/zh/reference/functions#入口点)。由于 `#`
+不在标识符字符集内，属性永远不会与普通名字冲突。
+
 ## 标识符
 
 字符集固定为 **ASCII**，且不以数字开头：
@@ -29,16 +32,18 @@ let _cache = 1           // lint 约定：标记未使用，语法上仍是普�
 **严格保留关键字（16 个）**——不可用作变量名、函数名：
 
 ```
-let  mut  const  fn  if  else  elif  while  for  in  return  execute  at  component  true  false
+let  mut  const  fn  if  else  elif  while  repeat  for  in  return  execute  component  true  false
 ```
 
 **上下文识别字**——仅在特定语法位置被当作关键字，其他位置仍是普通标识符：
 
-| 词                                                    | 识别位置                                    | 其他位置                              |
-| :---------------------------------------------------- | :------------------------------------------ | :------------------------------------ |
-| `tick`                                                | 仅 `component { }` 体内（组件方法名）       | 命令名（如 `/tick freeze`）           |
-| `return`                                              | 模块顶层回落为命令；`fn` 体内识别为返回语句 | 命令名（`return run …`）              |
-| 类型名（见[类型](/zh/reference/variables-and-types)） | 仅在类型位置                                | 命令名（如 `/tag`、`/team`、`/item`） |
+| 词                                                                                  | 识别位置                                                      | 其他位置                              |
+| :---------------------------------------------------------------------------------- | :------------------------------------------------------------ | :------------------------------------ |
+| `tick`                                                                              | 仅 `component { }` 体内（组件方法名）                         | 命令名（如 `/tick freeze`）           |
+| `return`                                                                            | 模块顶层回落为命令；`fn` 体内识别为返回语句                   | 命令名（`return run …`）              |
+| `at` `as` `positioned` `align` `anchored` `facing` `rotated` `store` `run` `unless` | 仅作 `execute` 动词（见[控制流](/zh/reference/control-flow)） | 命令名或普通标识符                    |
+| `with`                                                                              | 仅作[命令选项](/zh/reference/commands#命令选项)引导词         | 普通标识符                            |
+| 类型名（见[类型](/zh/reference/variables-and-types)）                               | 仅在类型位置                                                  | 命令名（如 `/tag`、`/team`、`/item`） |
 
 **透传命令词不保留**——`effect`、`give`、`particle`、`tellraw`、`tp`、`summon`、`data` 等
 一律是普通标识符，直接作为命令头使用，无需为每个命令声明关键字。
@@ -51,3 +56,22 @@ let  mut  const  fn  if  else  elif  while  for  in  return  execute  at  compon
 | 定点浮点 | `3.14`、`0.5`                     |
 | 布尔     | `true`、`false`                   |
 | 字符串   | `"hello"`、`"连击 x$comboCount!"` |
+
+### 字符串转义
+
+字符串字面量内识别以下转义；其他 `\x` 一律报错：
+
+| 转义 | 结果               |
+| :--- | :----------------- |
+| `\"` | 字面双引号         |
+| `\\` | 字面反斜杠         |
+| `\$` | 字面 `$`（不内插） |
+| `\n` | 换行               |
+| `\t` | 制表符             |
+
+`$` 只有后接标识符字符或 `{` 时才特殊；`\$` 在任何情况下都给出字面美元符号。
+
+```simy
+tellraw @s "花费：\$5"     // 输出：花费：$5
+tellraw @s "说 \"你好\""   // 输出：说 "你好"
+```

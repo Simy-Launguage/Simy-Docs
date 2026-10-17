@@ -30,6 +30,7 @@ const MAX_HEALTH = 20
 - 条件**免括号**，块用 `{ }` 界定。
 - `const` 在编译期彻底内联，不占运行时存储。
 - 语句以**换行**结尾（Python 风格），不靠标点符号。
+- 函数体最后一个表达式的值即返回值，末尾通常不必写 `return`。
 
 ## 类型后置
 
@@ -45,12 +46,23 @@ let damage = 10                  // 推断为 num
 ## 结构化替代 `execute` 嵌套
 
 原生数据包逻辑把 `execute` 子句层层嵌套，超过两层就很难读。Simy 改用普通的控制流
-（`if`、`for`、`while`）以及一个结构化的 `execute` 作用域，目标写在 `< … >` 中：
+（`if`、`for`、`while`、`repeat`）以及一条结构化的 `execute` 链，写成一串动词子句：
 
 ```simy
-execute at <@a> {
+execute at @a {
     particle minecraft:heart ~ ~1 ~ 0.5 0.5 0.5 0.1 10
 }
+```
+
+这条链还可以用 `|>` 竖排，自上而下地阅读。记号取自函数式语言与
+[Revo](https://revo.lung.fyi/)，但在这里 `|>` 只是续行标记，不是值管道（见
+[语法从何而来](/zh/guide/syntax-origins)）：
+
+```simy
+execute as @s
+    |> at ~ ~1 ~
+    |> if score $timer matches 1..100
+    |> title @s actionbar "tick"
 ```
 
 详见[控制流与作用域](/zh/reference/control-flow)。
@@ -60,6 +72,6 @@ execute at <@a> {
 实体、方块、物品、坐标、队伍、标签与原始 NBT 都是**一等类型**，而不是不透明的字符串。
 这让编译器能对它们推理、做更激进的优化；同时 `nbt` 仍作为逃生舱，承载尚未建模的部分。
 
-::: tip 好奇为什么长得像 Rust？
-表层语法是刻意借鉴 Rust 的。想了解「借了什么、又扔了什么」，见[为什么 Simy 长得像 Rust](/zh/guide/why-rust-like)。
+::: tip 想知道语法从哪来？
+表层同时借鉴了 Rust、Python、函数式语言以及 Minecraft 本身，并丢掉了只在系统编程里才划算的仪式感。完整来源地图见[语法从何而来](/zh/guide/syntax-origins)。
 :::

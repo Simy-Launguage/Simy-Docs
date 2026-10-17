@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Simy
   text: Minecraft datapack DSL
-  tagline: Modern, Rust-flavoured surface syntax over the reality of scoreboard / NBT / execute — compiling down to mcfunction and JSON.
+  tagline: Modern surface syntax over the reality of scoreboard / NBT / execute — borrowing from Rust, Python and functional languages, and compiling down to mcfunction and JSON.
   actions:
     - theme: brand
       text: Introduction

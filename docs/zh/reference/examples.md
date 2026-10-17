@@ -6,15 +6,19 @@
 const MAX_HEALTH = 20
 
 fn distance_multiplier(victim: entity) -> num {
-    return 2
+    2
+}
+
+fn hp_label(hp: num) -> str {
+    if hp <= 0 { "dead" } else { "alive" }
 }
 
 fn calculate_damage(attacker: entity, victim: entity) -> num {
     let baseDamage = 5
-    let damage = baseDamage * distance_multiplier(victim)
-    return damage
+    baseDamage * distance_multiplier(victim)
 }
 
+#[tick]
 fn tick_handler() {
     if counter >= 100 {
         tellraw @a "连击达标！"
@@ -26,9 +30,14 @@ fn tick_handler() {
         effect give $player minecraft:glowing 1 1
     }
 
-    execute at <@a> {
+    execute at @a {
         particle minecraft:heart ~ ~1 ~ 0.5 0.5 0.5 0.1 10
     }
+
+    execute as @s
+        |> at ~ ~1 ~
+        |> if score $timer matches 1..100
+        |> title @s actionbar "tick"
 }
 
 component Spirit(name: str, effect: str) {
@@ -38,22 +47,26 @@ component Spirit(name: str, effect: str) {
 }
 
 summon Spirit("Speed Spirit", "minecraft:speed")
-@s.score += 1
-tellraw @s "连击 x$comboCount!" (color: "red")
+@s.scores.combo += 1
+tellraw @s "连击 x$comboCount!" with(color: "red")
 tellraw @s "总分：${comboCount * 10}"
 ```
 
 ## 编译映射概览
 
-| Simy 构造             | 编译产物                               |
-| :-------------------- | :------------------------------------- |
-| `const`               | 内联，无运行时存储                     |
-| 不可变 `let`          | 常量折叠 / SSA                         |
-| `mut` `let`           | `scoreboard` 目标 / `storage`          |
-| `float`               | 定点数缩放（如 ×1000 + `scale=0.001`） |
-| `if` / `else`         | `execute if …` 分支                    |
-| `for … in <selector>` | `execute as …` + 迭代                  |
-| `execute at <x> { }`  | `execute at …`                         |
-| 命令语句              | 对应 `mcfunction` 行                   |
-| `component`           | `tag` + 多个 `scoreboard` 目标         |
-| 生成物命名            | `#simy/…`、`simy:…`                    |
+| Simy 构造             | 编译产物                                        |
+| :-------------------- | :---------------------------------------------- |
+| `const`               | 内联，无运行时存储                              |
+| 不可变 `let`          | 常量折叠 / SSA                                  |
+| `mut` `let`           | `scoreboard` 目标 / `storage`                   |
+| `float`               | 定点数缩放（×1024 + `scale=0.0009765625`）      |
+| `if` / `else`         | `execute if …` 分支（作值使用时另加临时变量）   |
+| 隐式返回              | `return run …`                                  |
+| `for … in @a`         | `execute as …` + 迭代                           |
+| `repeat N { }`        | 展开为直线代码                                  |
+| `execute at @a { }`   | `execute at …`                                  |
+| `#[tick]` / `#[load]` | `data/minecraft/tags/function/{tick,load}.json` |
+| 命令语句              | 对应 `mcfunction` 行                            |
+| 原始 `` `命令` ``     | 原样 `mcfunction` 行                            |
+| `component`           | `tag` + 多个 `scoreboard` 目标                  |
+| 生成物命名            | `#simy/…`、`simy:…`                             |

@@ -29,6 +29,19 @@ if counter % 10 == 0 {
 }
 ```
 
+::: info Integer semantics: round down first, then wrap
+`num` lives on a 32-bit scoreboard, so arithmetic has two rules worth knowing:
+
+- **`/` rounds down**, it does not truncate toward zero: `-7 / 2` is `-4`. `%` uses
+  `Math.floorMod` (since 1.13.1), so the result takes the **divisor's** sign.
+- **Overflow wraps**: going past the end does not error, it lands on the other end
+  (`2³¹ − 1` plus 1 drops to `−2³¹`). An out-of-range literal or `const` is a
+  **compile error**, while runtime values wrap exactly like Minecraft.
+
+Ranges, coordinate limits and the fixed-point ceiling live in
+[Numeric ranges and overflow](/reference/variables-and-types#numeric-ranges-and-overflow).
+:::
+
 ## Comparison operators
 
 These compare two values and produce a **boolean** — either `true` or `false`. That
@@ -59,6 +72,23 @@ Outside selectors, `!=` compares two values. Inside selector arguments it is als
 as "not equal" (e.g. `@e[type!=zombie]`) — see [Commands & Minecraft Atoms](/reference/commands).
 :::
 
+## Range expressions
+
+A range describes an interval and is mostly used with `in`:
+
+| Form    | Meaning       | Lowering                    |
+| :------ | :------------ | :-------------------------- |
+| `a..b`  | `a <= x < b`  | `if score x matches a..b-1` |
+| `a..=b` | `a <= x <= b` | `if score x matches a..b`   |
+| `a..`   | `x >= a`      | `if score x matches a..`    |
+| `..b`   | `x < b`       | `if score x matches ..b-1`  |
+
+```simy
+if timer in 1..10 {
+    …
+}
+```
+
 ## Logical operators
 
 These combine booleans. `&&` and `||` are usually written between two conditions.
@@ -79,6 +109,16 @@ if counter > 0 && timer > 0 {
 > can change the answer. In `a && b`, if `a` is already `false`, `b` is skipped; in
 > `a || b`, if `a` is already `true`, `b` is skipped.
 
+A condition built from these operators is a **test expression**: it lowers directly to
+`execute if` / `unless` clauses and allocates no storage. A boolean stored in a variable is a
+**value boolean** instead, held as a 0/1 scoreboard — see
+[Control Flow & Scopes](/reference/control-flow#conditions-test-expressions-vs-value-booleans).
+
+::: warning `|>` is not `||`
+`|>` is not a logical operator. It is a line-continuation marker used to stack `execute`
+clauses, and it is never the same as `||`.
+:::
+
 ## Assignment operators
 
 An assignment **stores** a value into a variable. The shorthand forms update the variable
@@ -95,8 +135,8 @@ in place; the variable must be declared `mut`.
 
 ```simy
 let mut timer = 5
-timer -= 1        // timer is now 4
-@s.score += 1     // increase the score by one
+timer -= 1              // timer is now 4
+@s.scores.combo += 1    // increase the combo score by one
 ```
 
 ## Member access and function calls
@@ -126,17 +166,17 @@ first. **Associativity** decides how operators of the _same_ precedence are grou
 
 From highest to lowest:
 
-| Precedence  | Operators         | Meaning                       | Associativity |
-| :---------- | :---------------- | :---------------------------- | :------------ |
-| 1 (highest) | `.`               | member access                 | Left          |
-| 2           | `()`              | call                          | Left          |
-| 3           | `!` `-` `+`       | unary                         | Right         |
-| 4           | `*` `/` `%`       | multiply / divide / remainder | Left          |
-| 5           | `+` `-`           | add / subtract                | Left          |
-| 6           | `<` `>` `<=` `>=` | comparison                    | Left          |
-| 7           | `==` `!=`         | equality                      | Left          |
-| 8           | `&&`              | AND                           | Left          |
-| 9 (lowest)  | `\|\|`            | OR                            | Left          |
+| Precedence  | Operators         | Meaning                       | Associativity   |
+| :---------- | :---------------- | :---------------------------- | :-------------- |
+| 1 (highest) | `.`               | member access                 | Left            |
+| 2           | `()`              | call                          | Left            |
+| 3           | `!` `-` `+`       | unary                         | Right           |
+| 4           | `*` `/` `%`       | multiply / divide / remainder | Left            |
+| 5           | `+` `-`           | add / subtract                | Left            |
+| 6           | `<` `>` `<=` `>=` | comparison                    | Non-associative |
+| 7           | `==` `!=`         | equality                      | Non-associative |
+| 8           | `&&`              | AND                           | Left            |
+| 9 (lowest)  | `\|\|`            | OR                            | Left            |
 
 Because `*` ranks above `+`, this expression:
 

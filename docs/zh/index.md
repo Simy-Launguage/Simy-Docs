@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Simy
   text: Minecraft 数据包 DSL
-  tagline: Rust 风格的现代表层语法，忠实映射 scoreboard / NBT / execute 的现实，编译为 mcfunction 与 JSON。
+  tagline: 现代表层语法，融合 Rust、Python 与函数式语言的风格，忠实映射 scoreboard / NBT / execute 的现实，编译为 mcfunction 与 JSON。
   actions:
     - theme: brand
       text: 简介

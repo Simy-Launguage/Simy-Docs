@@ -1,38 +1,91 @@
 # Installation
 
-Simy ships **no standalone installer**. The compiler is an ordinary Rust crate — the
-`simy-cli` package, which provides the `simy` command — so it is installed with **Cargo**.
-Cargo is part of the Rust toolchain, which means: install Rust first, then install Simy.
+Simy has a transpiler — `simy-cli`, an ordinary command-line tool. There are several ways to
+get it, so pick whichever suits you:
 
 ::: warning The compiler is still being built
 Right now the compiler sits at milestone **M0** (scaffold): the crate layout, the CLI skeleton
 and the pipeline modules exist, but the parser, the `simy.kdl` manifest and code generation are
-still being written, and nothing has been published to crates.io yet. Today the only way to
-get a `simy` binary is to build it from source. The steps below describe the intended
-workflow, so they can be followed as-is once the crate is released.
+still being written. **No downloadable release exists yet.**
 :::
 
-## 1. Install the Rust toolchain
+## Web playground
 
+Build datapacks in the browser — learn and try Simy syntax with nothing to install.
+
+- [Website](https://martinfowler.com/dsl.html) # TODO
+
+## Quick install
+
+::: code-group
+
+```sh [Windows]
+$ powershell -ExecutionPolicy ByPass -c "irm https://simy.neutriny.dev/install.ps1 | iex"
+```
+
+```bash [macOS / Linux]
+$ curl -LsSf https://simy.neutriny.dev/install.sh | sh
+```
+:::
+
+## Cargo
+
+```sh
+$ cargo install simy-cli
+```
+
+## Winget
+
+```sh
+$ winget install Simy.Simy
+```
+
+## Scoop
+
+```sh
+$ scoop install simy
+```
+
+## Homebrew
+
+```sh
+$ brew install simy
+```
+
+::: tip What you can do today
+The **Zed editor extension** already provides highlighting, brackets, folding and an outline
+(see [Where the project lives](#where-the-project-lives)). The web playground, installers and
+package managers are still planned; until they ship, build from source.
+:::
+
+## Build from source
+
+You need a Rust toolchain on your machine. If you do not have one, the details below walk
+through installing Rust.
+
+### 1. Install the Rust toolchain
+
+::: details Click to expand
 Install Rust with [rustup](https://rustup.rs/), the official installer. It also installs Cargo
 and puts `rustc`, `cargo` and friends on your `PATH`.
 
 **Windows** — download and run [`rustup-init.exe`](https://rustup.rs/), or install it with
 winget from PowerShell:
 
-```powershell
-winget install Rustlang.Rustup
+```sh
+$ winget install Rustlang.Rustup
 ```
 
 **macOS / Linux**:
 
 ```sh
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 When rustup asks, the default (stable) toolchain is the right choice.
+:::
 
-### Windows: MSVC build tools and the Windows SDK
+::: details Windows: MSVC build tools and the Windows SDK
 
 Rust's default Windows target (`x86_64-pc-windows-msvc`) links with MSVC, so it needs the
 **MSVC C++ build tools and the Windows SDK**. If neither is installed yet, `rustup-init.exe`
@@ -55,45 +108,32 @@ If you would rather not spend the disk space, install only the build tools first
 ![Visual Studio Installer, Individual components tab, with the Windows 11 SDK and the MSVC build tools for x64/x86 ticked](/guide/msvc-build-tools.png)
 
 Already have Visual Studio (or another MSVC toolchain) installed? Then you can skip this part.
+:::
 
-### Check the toolchain
+### 2. Check the toolchain
 
 Open a **new** terminal (so the updated `PATH` takes effect) and check the versions:
 
 ```sh
-rustc --version
-cargo --version
+$ rustc --version
+$ cargo --version
 ```
 
 Simy uses Rust **edition 2024**, so the toolchain must be **1.85 or newer**. `rustup update`
 keeps it up to date.
 
-## 2. Install the Simy compiler
-
-Once the crate is published on crates.io, one command is all it takes:
+### 3. Get the Simy transpiler source and build it
 
 ```sh
-cargo install simy-cli
+$ git clone https://github.com/Simy-Launguage/Simy
+$ cd Simy
+$ cargo install --path crates/simy-cli
 ```
 
-Cargo downloads the sources, builds them locally and drops the `simy` binary into the Cargo
-binary directory (`~/.cargo/bin`, or `%USERPROFILE%\.cargo\bin` on Windows), which `rustup`
-put on your `PATH` in step 1.
-
-Until the release lands, build the same binary straight from the repository:
+## Check the installation
 
 ```sh
-git clone https://github.com/Simy-Launguage/Simy
-cd Simy
-cargo install --path crates/simy-cli
-```
-
-That works with a plain `git` checkout as well as with an extracted source archive.
-
-## 3. Check the installation
-
-```sh
-simy --help
+$ simy --help
 ```
 
 The binary prints its command list. Keep the M0 status in mind: you will see the CLI skeleton
@@ -101,13 +141,50 @@ rather than a working transpile. The user-facing commands land later — `simy n
 scaffold) with milestone **M2**, and `simy build` (`.simy` → datapack in `dist/`) with
 milestone **M3**.
 
-## Keeping things up to date
+## Update and uninstall
 
-```sh
-rustup update                  # toolchain
-cargo install simy-cli --force # compiler, after a new release
-cargo uninstall simy-cli       # remove it again
+With a package manager:
+
+::: code-group
+
+```sh [Cargo]
+$ rustup update                  # update the toolchain
+$ cargo install simy-cli --force # update the compiler after a new release
+$ cargo uninstall simy-cli       # uninstall
 ```
+
+```sh [Winget]
+$ winget upgrade --id Simy.Simy   # update
+$ winget uninstall --id Simy.Simy # uninstall
+```
+
+```sh [Scoop]
+$ scoop update simy    # update
+$ scoop uninstall simy # uninstall
+```
+
+```sh [Homebrew]
+$ brew upgrade simy   # update
+$ brew uninstall simy # uninstall
+```
+:::
+
+If you used the quick install:
+
+::: code-group
+
+```sh [Windows]
+$ rm path -r # path to be filled in
+```
+
+```bash [Linux]
+$ rm -rf path # path to be filled in
+```
+
+```bash [macOS]
+$ rm -rf path # path to be filled in
+```
+:::
 
 ## Where the project lives
 

@@ -12,6 +12,7 @@ export const simyLang = {
   displayName: 'Simy',
   patterns: [
     { include: '#comments' },
+    { include: '#attributes' },
     { include: '#strings' },
     { include: '#keywords' },
     { include: '#types' },
@@ -48,13 +49,20 @@ export const simyLang = {
     },
     keywords: {
       patterns: [
-        { name: 'keyword.control.simy', match: '\\b(if|elif|else|while|for|in|return)\\b' },
+        { name: 'keyword.control.simy', match: '\\b(if|elif|else|while|repeat|for|in|return)\\b' },
         {
           name: 'keyword.declaration.simy',
-          match: '\\b(let|mut|const|fn|component|execute|at)\\b',
+          match: '\\b(let|mut|const|fn|component|execute)\\b',
+        },
+        {
+          name: 'keyword.other.execute.simy',
+          match: '\\b(at|as|positioned|align|anchored|facing|rotated|store|run|unless|with)\\b',
         },
         { name: 'constant.language.boolean.simy', match: '\\b(true|false)\\b' },
       ],
+    },
+    attributes: {
+      patterns: [{ name: 'punctuation.definition.attribute.simy', match: '#\\[[a-z_]+\\]' }],
     },
     types: {
       patterns: [
@@ -84,7 +92,7 @@ export const simyLang = {
       patterns: [
         {
           name: 'keyword.operator.simy',
-          match: '->|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|&&|\\|\\||[-+*/%<>=!]',
+          match: '\\|>|->|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|&&|\\|\\||[-+*/%<>=!]',
         },
       ],
     },

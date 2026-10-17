@@ -12,6 +12,7 @@ transpiler front end)** and **codegen**.
 | Variable names  | Any case                | —     |
 | File paths      | Forced lowercase        | lint  |
 | `_` prefix      | Allowed, marks "unused" | lint  |
+| Call `(`        | Adjacent to the callee  | fmt   |
 
 ## Generated namespaces
 

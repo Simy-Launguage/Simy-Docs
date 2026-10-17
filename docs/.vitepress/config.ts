@@ -22,7 +22,7 @@ const enSidebar = {
         { text: 'Introduction', link: '/guide/introduction' },
         { text: 'Installation', link: '/guide/installation' },
         { text: 'Design Principles', link: '/guide/design-principles' },
-        { text: 'Why Rust-like Syntax?', link: '/guide/why-rust-like' },
+        { text: 'Where the Syntax Comes From', link: '/guide/syntax-origins' },
       ],
     },
   ],
@@ -38,6 +38,7 @@ const enSidebar = {
         { text: 'Operators', link: '/reference/operators' },
         { text: 'Components', link: '/reference/components' },
         { text: 'Naming & Namespaces', link: '/reference/conventions' },
+        { text: 'Disambiguation', link: '/reference/disambiguation' },
       ],
     },
     {
@@ -60,7 +61,7 @@ const zhSidebar = {
         { text: '简介', link: '/zh/guide/introduction' },
         { text: '安装', link: '/zh/guide/installation' },
         { text: '设计原则', link: '/zh/guide/design-principles' },
-        { text: '为什么像 Rust', link: '/zh/guide/why-rust-like' },
+        { text: '语法从何而来', link: '/zh/guide/syntax-origins' },
       ],
     },
   ],
@@ -76,6 +77,7 @@ const zhSidebar = {
         { text: '运算符', link: '/zh/reference/operators' },
         { text: '组件', link: '/zh/reference/components' },
         { text: '命名与命名空间', link: '/zh/reference/conventions' },
+        { text: '消歧规则', link: '/zh/reference/disambiguation' },
       ],
     },
     {

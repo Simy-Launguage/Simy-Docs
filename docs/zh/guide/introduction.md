@@ -1,7 +1,8 @@
 # 简介
 
-> **Simy** 是一门面向 **Minecraft 数据包开发** 的 DSL。表层采用现代语言工效学（Rust 风格），
-> 底层忠实映射 `scoreboard` / `NBT` / `execute` 的现实，编译目标为 `mcfunction` 与 JSON。
+> **Simy** 是一门面向 **Minecraft 数据包开发** 的 DSL。表层采用现代语言工效学——静态类型、花括号
+> 与表达式化风格，取自多门语言——底层忠实映射 `scoreboard` / `NBT` / `execute` 的现实，编译目标为
+> `mcfunction` 与 JSON。
 >
 > 这份文档描述 Simy 当前的语法规范（**v0.1**）。
 
@@ -14,30 +15,36 @@ Simy 保持语义与 Minecraft 实际执行的一致，但提供一门表层语�
 
 - **默认不可变的绑定**，状态值必须显式标 `mut`。
 - **条件免括号**，用 `{ }` 块替代嵌套 `execute`。
+- **一切皆表达式**：块与 `if` 都产生值，函数体最后一个表达式的值即返回值——这一设计借鉴自实验性语言
+  [Revo](https://revo.lung.fyi/)。
 - **分层类型系统**，Minecraft 原子（`entity`、`pos`、`item`……）是一等公民。
 - **组件**，把状态与行为打包成一个单位。
 - **NBT 逃生舱**，新游戏版本永远不会把你卡住。
 
 ::: tip 第一次来？
-想知道怎么装编译器？[安装](/zh/guide/installation)一节讲了 Rust 工具链与 `cargo install`
-的步骤。之后再先读[设计原则](/zh/guide/design-principles)了解「为什么」，进入[语法参考](/zh/reference/lexical)看「怎么写」。
+想知道怎么装编译器？[安装](/zh/guide/installation)一节兼有两个入口：日常使用的免安装渠道，
+以及用 Cargo 从源码构建。之后再先读[设计原则](/zh/guide/design-principles)了解「为什么」，
+进入[语法参考](/zh/reference/lexical)看「怎么写」。
 :::
 
 ## 编译成什么
 
 Simy 是**源语言**，不是运行时。每条声明都会在编译期降级：
 
-| Simy 构造             | 编译产物                               |
-| :-------------------- | :------------------------------------- |
-| `const`               | 内联，无运行时存储                     |
-| 不可变 `let`          | 常量折叠 / SSA                         |
-| `mut` `let`           | `scoreboard` 目标 / `storage`          |
-| `float`               | 定点数缩放（如 ×1000 + `scale=0.001`） |
-| `if` / `else`         | `execute if …` 分支                    |
-| `for … in <selector>` | `execute as …` + 迭代                  |
-| `execute at <x> { }`  | `execute at …`                         |
-| 命令语句              | 对应 `mcfunction` 行                   |
-| `component`           | `tag` + 多个 `scoreboard` 目标         |
+| Simy 构造             | 编译产物                                        |
+| :-------------------- | :---------------------------------------------- |
+| `const`               | 内联，无运行时存储                              |
+| 不可变 `let`          | 常量折叠 / SSA                                  |
+| `mut` `let`           | `scoreboard` 目标 / `storage`                   |
+| `float`               | 定点数缩放（×1024 + `scale=0.0009765625`）      |
+| `if` / `else`         | `execute if …` 分支                             |
+| 隐式返回              | `return run …`                                  |
+| `for … in @a`         | `execute as …` + 迭代                           |
+| `repeat N { }`        | 展开为直线代码                                  |
+| `execute at @a { }`   | `execute at …`                                  |
+| `#[tick]` / `#[load]` | `data/minecraft/tags/function/{tick,load}.json` |
+| 命令语句              | 对应 `mcfunction` 行                            |
+| `component`           | `tag` + 多个 `scoreboard` 目标                  |
 
 完整的映射见[示例与编译映射](/zh/reference/examples)。
 
@@ -57,7 +64,7 @@ Simy 是**源语言**，不是运行时。每条声明都会在编译期降级�
 
 所以更有用的问题不是「编译还是解释」，而是：
 
-- **错误什么时候暴露？** 对 Simy 而言，是在启动游戏之前——这正是要有真正前端的原因之一（见[为什么 Simy 长得像 Rust](/zh/guide/why-rust-like)）。
+- **错误什么时候暴露？** 对 Simy 而言，是在启动游戏之前——这正是要有真正前端的原因之一（见[语法从何而来](/zh/guide/syntax-origins)）。
 - **真正运行的是什么？** 原版 Minecraft。你交付的是一个普通数据包，因此 Simy 的产物可以和手写函数并存，共用同一套工具链。
 
 ## 先睹为快
@@ -67,10 +74,10 @@ const MAX_HEALTH = 20
 
 fn calculate_damage(attacker: entity, victim: entity) -> num {
     let baseDamage = 5
-    let damage = baseDamage * distance_multiplier(victim)
-    return damage
+    baseDamage * distance_multiplier(victim)
 }
 
+#[tick]
 fn tick_handler() {
     if counter >= 100 {
         tellraw @a "连击达标！"
@@ -82,7 +89,7 @@ fn tick_handler() {
         effect give $player minecraft:glowing 1 1
     }
 
-    execute at <@a> {
+    execute at @a {
         particle minecraft:heart ~ ~1 ~ 0.5 0.5 0.5 0.1 10
     }
 }
@@ -99,5 +106,6 @@ fn tick_handler() {
   [命令与 Minecraft 原子](/zh/reference/commands) ·
   [运算符](/zh/reference/operators) ·
   [组件](/zh/reference/components) ·
-  [命名与命名空间](/zh/reference/conventions)。
+  [命名与命名空间](/zh/reference/conventions) ·
+  [消歧规则](/zh/reference/disambiguation)。
 - **附录** —— [示例与编译映射](/zh/reference/examples)。
