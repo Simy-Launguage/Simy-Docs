@@ -5,14 +5,15 @@ The following rules **do not change the grammar**; they are enforced by **lint (
 transpiler front end)** and **codegen**.
 :::
 
-| Object          | Convention              | Owner |
-| :-------------- | :---------------------- | :---- |
-| Function names  | Forced `snake_case`     | lint  |
-| Component names | Forced `CamelCase`      | lint  |
-| Variable names  | Any case                | —     |
-| File paths      | Forced lowercase        | lint  |
-| `_` prefix      | Allowed, marks "unused" | lint  |
-| Call `(`        | Adjacent to the callee  | fmt   |
+| Object           | Convention              | Owner |
+| :--------------- | :---------------------- | :---- |
+| Function names   | Forced `snake_case`     | lint  |
+| Component names  | Forced `CamelCase`      | lint  |
+| Variable names   | Any case                | —     |
+| File paths       | Forced lowercase        | lint  |
+| `_` prefix       | Allowed, marks "unused" | lint  |
+| Call `(`         | Adjacent to the callee  | fmt   |
+| Control-flow `{` | End of the header line  | fmt   |
 
 ## Generated namespaces
 

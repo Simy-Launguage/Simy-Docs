@@ -6,6 +6,7 @@ decides which meaning applies — so you never have to guess.
 | Feature                     | How it is decided                                                                                                                                     |
 | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `{ }`                       | A block, unless it follows `=` (map / structure literal) or sits in a command-argument position (raw [NBT](/reference/commands#the-nbt-escape-hatch)) |
+| `{` after a control header  | Must stay on the header line; a leading `{` starts a new bare block statement                                                                         |
 | `< >`                       | Generic parameters in type position (`list<num>`); comparison in expression position                                                                  |
 | `( )` adjacent to an ident  | Function call                                                                                                                                         |
 | `( )` after whitespace      | Coordinate / vector atom only (see [Functions](/reference/functions#calling-a-function))                                                              |

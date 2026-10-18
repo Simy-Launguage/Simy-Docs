@@ -95,6 +95,8 @@ fn distance_multiplier(victim: entity) -> num {
 
 `return` 保留给**提前退出**，而不是正常出口。见[函数](/zh/reference/functions#隐式返回)。
 
+很多现代的命令式语言也有隐式返回，其实是延续了函数式语言“Everything is Something”的思想
+
 ### 用 `|>` 竖排 `execute` 子句
 
 ```simy
@@ -104,11 +106,24 @@ execute as @s
     |> title @s actionbar "tick"
 ```
 
-这里借的**只是样子**。在函数式语言与 Revo 里，`|>` 是真正的运算符，把左侧的值喂给右侧的函数；在 Simy 里它只是**续行标记**：不携带任何语义、等价于一个空格，存在的唯一理由就是让 `if` 这类 `execute` 子句可以单独起一行。Simy 没有值管道——见[控制流与作用域](/zh/reference/control-flow#execute-上下文作用域)。
+我在设计 Simy 语法时了解到 Revo 有下面这样的写法。
+
+```revo
+let x = "hello"
+  |> _:upper()
+  |> _:sub(1, 2)
+  |> assert_eq("el")
+```
+
+`|>` 是函数式语言常有的符号，通常指将前一个表达式的结果送入下一个函数。
+
+我想到虽然 execute 链没有值传递，但也是从左往右动宾交替，像一节节管道，为什么不能用 `|>` 把“管道”截开换行呢？使用声明式的链式语法，将深层嵌套的 execute 链变成单层、线性、可读的“子句序列”。
+
+值得强调的是，在函数式语言与 Revo 里，`|>` 是真正的运算符，把左侧的值传递给右侧的函数；在 Simy 里它只是**续行标记**：不携带任何语义、等价于一个空格，存在的唯一理由就是让 `if` 这类 `execute` 子句可以单独起一行。Simy 没有值管道——见[控制流与作用域](/zh/reference/control-flow#execute-上下文作用域)。
 
 ## 从 Minecraft 本身借了什么
 
-Simy 里最大的那套词汇其实和编程语言无关，它来自 Minecraft 自己：
+Simy 里最大的那套词汇其实和编程语言无关，而来自 Minecraft 自己：
 
 - **命令**保持原样：`effect give $player minecraft:glowing 1 1`。
 - **选择器与坐标**原样书写（`@a[gamemode=adventure]`、`~ ~1 ~`），`scoreboard`、`storage` 与 NBT 就是真实的存储模型，不藏在游戏并不存在的抽象后面。

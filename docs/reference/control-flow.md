@@ -22,9 +22,26 @@ Use `elif` instead of nesting an `if` inside an `else`. You can chain as many `e
 as you need, and the whole ladder stays at a single indentation level.
 
 ::: info Line rules
-`elif`, `else` and an opening `{` must stay on the same line as what precedes them.
-Newlines are **ignored inside `()`, `[]`, `<>` and `{}`** (implicit line joining), so
-argument lists, parameter lists and selector arguments can span multiple lines.
+Every construct with a `{ }` body — `if` / `elif` / `else`, `while`, `for … in`, `repeat`,
+`execute`, `fn`, `component`, and a bare `{ }` block — must put its opening `{` at the **end of
+the header line**. It may never start a new line:
+
+```simy
+// correct
+if counter >= 100 {
+    …
+}
+
+// wrong: a leading `{` starts a new bare block statement
+if counter >= 100
+{
+    …
+}
+```
+
+A newline separates statements, so the header and its `{` cannot be split; formatters must keep
+them together. Newlines are **ignored inside `()`, `[]`, `<>` and `{}`** (implicit line
+joining), so argument lists, parameter lists and selector arguments can span multiple lines.
 A line that begins with `|>` continues the previous statement (see
 [the `execute` chain](#the-execute-context-scope)) — and it is the only convenient way to
 start an `if` clause on its own line, since a bare `if` here is a control-flow block.
